@@ -20,4 +20,4 @@ print(sequence)
 print("Sequence had", a, "total steps.")
 
 print()
-print("Program ending.")
+print("Program ending.")   
