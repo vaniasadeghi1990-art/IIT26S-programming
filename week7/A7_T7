@@ -1,0 +1,83 @@
+ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+
+def readConfig(PFilename: str, PRotors: list[str]) -> str:
+    """Reads rotors into PRotors and returns the reflector string."""
+    PRotors.clear()
+    Reflector = ""
+    Filehandle = open(PFilename, "r", encoding="utf-8")
+    for Line in Filehandle:
+        Row = Line.strip()
+        if Row == "":
+            continue
+        Key, Value = Row.split(":")
+        if Key.startswith("Rotor"):
+            PRotors.append(Value.strip().upper())
+        elif Key.startswith("Reflector"):
+            Reflector = Value.strip().upper()
+    Filehandle.close()
+    return Reflector
+
+
+def rotate(PPositions: list[int]) -> None:
+    # Rotor 1 turns on every key press, carry moves to next rotor
+    for i in range(len(PPositions)):
+        PPositions[i] += 1
+        if PPositions[i] < 26:
+            break
+        PPositions[i] = 0
+    return None
+
+
+def scramble(PChar: str, PRotors: list[str], PPositions: list[int], PReflector: str) -> str:
+    rotate(PPositions)
+    Index = ALPHABET.index(PChar)
+    # Forward pass-through: rotors 1 -> 3
+    for i in range(len(PRotors)):
+        Letter = ALPHABET[(Index + PPositions[i]) % 26]       # offset by rotor position
+        Index = (PRotors[i].index(Letter) - PPositions[i]) % 26
+    # Reflector
+    Index = ALPHABET.index(PReflector[Index])
+    # Reverse pass-through: rotors 3 -> 1
+    for i in range(len(PRotors) - 1, -1, -1):
+        Letter = PRotors[i][(Index + PPositions[i]) % 26]
+        Index = (ALPHABET.index(Letter) - PPositions[i]) % 26
+    return ALPHABET[Index]
+
+
+def convertRow(PRow: str, PRotors: list[str], PReflector: str) -> None:
+    Positions: list[int] = [0, 0, 0]     # always start from [0, 0, 0]
+    Converted = ""
+    for Char in PRow.upper():
+        if Char not in ALPHABET:
+            print('Character "{}" skipped (not A-Z).'.format(Char))
+            continue
+        Result = scramble(Char, PRotors, Positions, PReflector)
+        print('Character "{}" illuminated as "{}"'.format(Char, Result))
+        Converted += Result
+    print('Converted row - "{}".'.format(Converted))
+    Positions.clear()
+    return None
+
+
+def main() -> None:
+    Rotors: list[str] = []
+    Filename = input("Insert config(filename): ")
+    Reflector = readConfig(Filename, Rotors)
+    Plugs = input("Insert plugs (y/n)?: ")
+    if Plugs.lower() == "y":
+        print("Plugboard is not implemented in this version.")
+    else:
+        print("No extra plugs inserted.")
+    print("Enigma initialized.")
+    while True:
+        Row = input("\nInsert row (empty stops): ")
+        if Row == "":
+            break
+        convertRow(Row, Rotors, Reflector)
+    print("\nEnigma closing.")
+    Rotors.clear()
+    return None
+
+
+main()

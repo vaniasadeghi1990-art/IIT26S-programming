@@ -1,0 +1,109 @@
+import random
+random.seed(1234)
+
+ROCK = 1
+PAPER = 2
+SCISSORS = 3
+NAMES = {ROCK: "rock", PAPER: "paper", SCISSORS: "scissors"}
+BOT_NAME = "RPS-3PO"
+LINE = "#" * 25
+
+ART = {
+    ROCK: """    _______
+---'   ____)
+      (_____)
+      (_____)
+      (____)
+---.__(___)""",
+    PAPER: """     _______
+---'    ____)____
+           ______)
+          _______)
+         _______)
+---.__________)""",
+    SCISSORS: """    _______
+---'   ____)____
+          ______)
+       __________)
+      (____)
+---.__(___)""",
+}
+
+
+def decideWinner(PPlayer: int, PBot: int) -> int:
+    """Returns 0 = draw, 1 = player wins, 2 = bot wins."""
+    if PPlayer == PBot:
+        return 0
+    if (PPlayer == ROCK and PBot == SCISSORS) or \
+       (PPlayer == PAPER and PBot == ROCK) or \
+       (PPlayer == SCISSORS and PBot == PAPER):
+        return 1
+    return 2
+
+
+def playRound(PName: str, PChoice: int, PScores: list[int]) -> None:
+    # PScores = [player wins, player losses, draws]
+    BotChoice = random.randint(1, 3)
+    print("Rock! Paper! Scissors! Shoot!\n")
+    print(LINE)
+    print("{} chose {}.\n".format(PName, NAMES[PChoice]))
+    print(ART[PChoice])
+    print()
+    print(LINE)
+    print("{} chose {}.\n".format(BOT_NAME, NAMES[BotChoice]))
+    print(ART[BotChoice])
+    print()
+    print(LINE)
+    print()
+    Result = decideWinner(PChoice, BotChoice)
+    if Result == 0:
+        print("Draw! Both players chose {}.".format(NAMES[PChoice]))
+        PScores[2] += 1
+    elif Result == 1:
+        print("{} {} beats {} {}.".format(PName, NAMES[PChoice], BOT_NAME, NAMES[BotChoice]))
+        PScores[0] += 1
+    else:
+        print("{} {} beats {} {}.".format(BOT_NAME, NAMES[BotChoice], PName, NAMES[PChoice]))
+        PScores[1] += 1
+    return None
+
+
+def displayResults(PName: str, PScores: list[int]) -> None:
+    print("\nResults:")
+    print("{} - wins ({}), losses ({}), draws ({})".format(PName, PScores[0], PScores[1], PScores[2]))
+    print("{} - wins ({}), losses ({}), draws ({})".format(BOT_NAME, PScores[1], PScores[0], PScores[2]))
+    return None
+
+
+def main() -> None:
+    print("Program starting.")
+    print("Welcome to the rock-paper-scissors game!")
+    Name = input("Insert player name: ")
+    print("Welcome {}!".format(Name))
+    print("Your opponent is {}.".format(BOT_NAME))
+    print("Game starts...")
+    Scores: list[int] = [0, 0, 0]
+    while True:
+        print("\nOptions:")
+        print("1 - Rock")
+        print("2 - Paper")
+        print("3 - Scissors")
+        print("0 - Quit game")
+        try:
+            Choice = int(input("Your choice: "))
+        except ValueError:
+            print("Invalid choice.")
+            continue
+        if Choice == 0:
+            break
+        if Choice in (ROCK, PAPER, SCISSORS):
+            playRound(Name, Choice, Scores)
+        else:
+            print("Invalid choice.")
+    displayResults(Name, Scores)
+    Scores.clear()
+    print("\nProgram ending.")
+    return None
+
+
+main()

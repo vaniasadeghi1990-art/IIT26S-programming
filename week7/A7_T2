@@ -1,0 +1,33 @@
+def parseValues(PText: str, PNumbers: list[int]) -> None:
+    for Part in PText.split(","):
+        Part = Part.strip()
+        try:
+            PNumbers.append(int(Part))
+        except ValueError:
+            print('Invalid value "{}" ignored.'.format(Part))
+    return None
+
+
+def analyse(PNumbers: list[int]) -> None:
+    if len(PNumbers) == 0:
+        print("There are no values to analyze.")
+        return None
+    Total = sum(PNumbers)
+    Parity = "even" if Total % 2 == 0 else "odd"
+    print("There are {} integers in the list.".format(len(PNumbers)))
+    print("Sum of the integers is {} and it's {}".format(Total, Parity))
+    return None
+
+
+def main() -> None:
+    print("Program starting.")
+    Numbers: list[int] = []
+    Text = input("Insert comma separated integers: ")
+    parseValues(Text, Numbers)
+    analyse(Numbers)
+    Numbers.clear()
+    print("Program ending.")
+    return None
+
+
+main()

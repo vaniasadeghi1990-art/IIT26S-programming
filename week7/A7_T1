@@ -1,0 +1,36 @@
+def collectIntegers(PNumbers: list[int]) -> None:
+    print("Collect positive integers.")
+    while True:
+        try:
+            Value = int(input("Insert positive integer(negative stops): "))
+        except ValueError:
+            print("Invalid input, please insert an integer.")
+            continue
+        if Value < 0:
+            break
+        PNumbers.append(Value)
+    print("Stopped collecting positive integers.")
+    return None
+
+
+def displayIntegers(PNumbers: list[int]) -> None:
+    if len(PNumbers) == 0:
+        print("No integers to display.")
+        return None
+    print("Displaying {} integers:".format(len(PNumbers)))
+    for Index in range(len(PNumbers)):
+        print("- Index {} => Ordinal {} => Integer {}".format(Index, Index + 1, PNumbers[Index]))
+    return None
+
+
+def main() -> None:
+    print("Program starting.")
+    Numbers: list[int] = []
+    collectIntegers(Numbers)
+    displayIntegers(Numbers)
+    Numbers.clear()
+    print("Program ending.")
+    return None
+
+
+main()
