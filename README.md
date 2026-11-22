@@ -23,3 +23,5 @@ https://github.com/vaniasadeghi1990-art/Python_programming_W6_5.git
 https://github.com/vaniasadeghi1990-art/Python_programming_W6_6.git
 
 https://github.com/vaniasadeghi1990-art/Python_programming_W7_4.git
+
+https://github.com/vaniasadeghi1990-art/Python_programming_W7_5.git
